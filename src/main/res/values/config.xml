@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <string name="serverUrl">http://121.199.26.229:8080/info.xml</string>
+</resources>
