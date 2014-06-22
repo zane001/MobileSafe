@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.zane001.mobilesafe.SplashActivity"
+            android:name=".SplashActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity"/>
+        <activity android:name=".SettingCenterActivity"/>
+        <activity android:name=".LostProtectedActivity"/>
     </application>
 
 </manifest>

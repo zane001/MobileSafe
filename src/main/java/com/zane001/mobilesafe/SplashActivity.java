@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -122,7 +123,7 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);  //  无标题栏，全屏显示
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
         rl_splash = (RelativeLayout) findViewById(R.id.rl_splash);
@@ -141,58 +142,69 @@ public class SplashActivity extends Activity {
     private class CheckVersionTask implements Runnable {
         @Override
         public void run() {
-            startTime = System.currentTimeMillis();
-            Message msg = Message.obtain();
-            try {
-                String serverUrl = getResources().getString(R.string.serverUrl);
-                URL url = new URL(serverUrl);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setConnectTimeout(5000);
-                int code = conn.getResponseCode();
-                if(code == 200) {
-                    InputStream is = conn.getInputStream();
-                    info = UpdateInfoParser.getUpdateInfo(is);
-                    endTime = System.currentTimeMillis();
-                    long resultTime = endTime - startTime;
-                    if(resultTime < 2000) {
-                        try {
-                            Thread.sleep(2000 - resultTime);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    msg.what = GET_INFO_SUCCESS;
-                    handler.sendMessage(msg); //忘记写，死活弹不出升级对话框。。。
-                } else {
-                    msg.what = SERVER_ERROR;
-                    handler.sendMessage(msg);
-                    endTime = System.currentTimeMillis();
-                    long resultTime = endTime - startTime;
-                    if(resultTime < 2000) {
-                        try {
-                            Thread.sleep(2000 - resultTime);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
+            SharedPreferences sp = getSharedPreferences("config", MODE_PRIVATE);
+            boolean autoUpdate = sp.getBoolean("autoUpdate", true); //如果不存在，返回true
+            if(!autoUpdate) {   //如果关闭了自动更新
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                msg.what = SERVER_URL_ERROR;
-                handler.sendMessage(msg);
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-                msg.what = XML_PARSE_ERROR;
-                handler.sendMessage(msg);
-            } catch (ProtocolException e) {
-                e.printStackTrace();
-                msg.what = PROTOCOL_ERROR;
-                handler.sendMessage(msg);
-            } catch (IOException e) {
-                e.printStackTrace();
-                msg.what = IO_ERROR;
-                handler.sendMessage(msg);
+                loadMainUI();
+            } else {    //如果打开了自动更新，则连接服务器进行更新
+                startTime = System.currentTimeMillis();
+                Message msg = Message.obtain();
+                try {
+                    String serverUrl = getResources().getString(R.string.serverUrl);
+                    URL url = new URL(serverUrl);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setConnectTimeout(5000);
+                    int code = conn.getResponseCode();
+                    if(code == 200) {
+                        InputStream is = conn.getInputStream();
+                        info = UpdateInfoParser.getUpdateInfo(is);
+                        endTime = System.currentTimeMillis();
+                        long resultTime = endTime - startTime;
+                        if(resultTime < 2000) {
+                            try {
+                                Thread.sleep(2000 - resultTime);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        msg.what = GET_INFO_SUCCESS;
+                        handler.sendMessage(msg); //忘记写，死活弹不出升级对话框。。。
+                    } else {
+                        msg.what = SERVER_ERROR;
+                        handler.sendMessage(msg);
+                        endTime = System.currentTimeMillis();
+                        long resultTime = endTime - startTime;
+                        if(resultTime < 2000) {
+                            try {
+                                Thread.sleep(2000 - resultTime);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    msg.what = SERVER_URL_ERROR;
+                    handler.sendMessage(msg);
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                    msg.what = XML_PARSE_ERROR;
+                    handler.sendMessage(msg);
+                } catch (ProtocolException e) {
+                    e.printStackTrace();
+                    msg.what = PROTOCOL_ERROR;
+                    handler.sendMessage(msg);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    msg.what = IO_ERROR;
+                    handler.sendMessage(msg);
+                }
             }
         }
     }
@@ -261,6 +273,4 @@ public class SplashActivity extends Activity {
             return "包名未找到";
         }
     }
-
-
 }
