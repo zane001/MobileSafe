@@ -3,13 +3,19 @@ package com.zane001.mobilesafe;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zane001.mobilesafe.utils.Md5Encoder;
@@ -17,7 +23,7 @@ import com.zane001.mobilesafe.utils.Md5Encoder;
 /**
  * Created by zane001 on 2014/6/22.
  */
-public class LostProtectedActivity extends Activity implements OnClickListener {
+public class LostProtectedActivity extends Activity implements View.OnClickListener {
 
     private SharedPreferences sp;
     private EditText et_first_dialog_pwd;
@@ -29,7 +35,13 @@ public class LostProtectedActivity extends Activity implements OnClickListener {
     private Button bt_normal_dialog_ok;
     private Button bt_normal_dialog_cancel; //非第一次进入“手机防盗”的界面
 
+    private TextView tv_lost_protect_number;
+    private RelativeLayout rl_lost_protect_setting;
+    private CheckBox cb_lost_protect_setting;
+    private TextView tv_lost_protect_reentry_setup;
+
     private AlertDialog dialog;
+    private static final String TAG = "LostProtectedActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,11 +147,91 @@ public class LostProtectedActivity extends Activity implements OnClickListener {
                 if(savedPwd.equals(Md5Encoder.encode(userEntryPwd))) {
                     //Toast.makeText(this, "密码正确", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
+                    if(isSetupAlready()) {
+                        Log.i(TAG, "进入到完成设置向导后的界面");
+                        setContentView(R.layout.lost_protected);
+                        tv_lost_protect_number = (TextView) findViewById(R.id.tv_lost_protect_number);
+                        String safeNumber = sp.getString("safeNumber", "");
+                        tv_lost_protect_number.setText(safeNumber);
+                        rl_lost_protect_setting = (RelativeLayout) findViewById(R.id.rl_lost_protect_setting);
+                        cb_lost_protect_setting = (CheckBox) findViewById(R.id.cb_lost_protect_setting);
+                        boolean protecting = sp.getBoolean("protecting", false);
+                        cb_lost_protect_setting.setChecked(protecting);
+                        if(protecting) {
+                            cb_lost_protect_setting.setText(" 防盗设置已经开启");
+                        } else {
+                            cb_lost_protect_setting.setText("防盗设置已经关闭");    //重新进入设置向导页面
+                        }
+                            tv_lost_protect_reentry_setup = (TextView) findViewById(R.id.tv_lost_protect_reentry_setup);
+                            rl_lost_protect_setting.setOnClickListener(this);
+                            tv_lost_protect_reentry_setup.setOnClickListener(this);
+                    } else {
+                        Log.i(TAG, "进入设置向导页面");
+                        Intent intent = new Intent(this, Setup1Activity.class);
+                        finish();
+                        startActivity(intent);
+                    }
                     return; //加载主界面
                 } else {
                     Toast.makeText(this, "密码不正确", Toast.LENGTH_SHORT).show();
                     return;
                 }
+            case R.id.tv_lost_protect_reentry_setup:    //重新进入设置向导
+                Intent reentryIntent = new Intent(this, Setup1Activity.class);
+                startActivity(reentryIntent);
+                finish();
+                break;
+            case R.id.rl_lost_protect_setting:  //是否开启防盗保护
+                SharedPreferences.Editor editor = sp.edit();
+                if(cb_lost_protect_setting.isChecked()) {
+                    cb_lost_protect_setting.setChecked(false);
+                    cb_lost_protect_setting.setText("防盗设置没有开启");
+                    editor.putBoolean("protecting", false);
+                } else {
+                    cb_lost_protect_setting.setChecked(true);
+                    cb_lost_protect_setting.setText("防盗设置已经开启");
+                    editor.putBoolean("protecting", true);
+                }
+                editor.commit();
+                break;
+            }
         }
+
+    /**
+     * 判断用户是否完成了设置向导
+     */
+    private boolean isSetupAlready() {
+        return sp.getBoolean("isSetup", false);
+    }
+
+    /**
+     * 当长按Menu键时，会打开一个菜单，当菜单第一次被打开时，会回调该方法
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(1, 1, 1, "更改标题名称");
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == 1) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            final EditText et = new EditText(this);
+            et.setHint("请输入新的标题名称,可以留空");
+            builder.setView(et);
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    String newName = et.getText().toString().trim();
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("newName", newName);
+                    editor.commit();
+                }
+            });
+            builder.create().show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
