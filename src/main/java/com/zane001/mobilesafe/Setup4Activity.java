@@ -2,6 +2,8 @@ package com.zane001.mobilesafe;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +11,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+
+import com.zane001.mobilesafe.receiver.MyAdmin;
 
 /**
  * Created by zane001 on 2014/7/1.
@@ -42,6 +46,17 @@ public class Setup4Activity extends Activity {
         });
     }
 
+    public void activeDeviceAdmin(View view) {
+        //创建一个与MyAdmin相关联的组件
+        ComponentName mAdminName = new ComponentName(this, MyAdmin.class);
+        DevicePolicyManager dm = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
+        if(!dm.isAdminActive(mAdminName)) { //判断组件是否获得了超级管理员的权限，如果没有，则添加权限
+            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mAdminName);
+            startActivity(intent);
+        }
+    }
+
     public void next(View view) {
         if (!cb_setup4_protect.isChecked()) { //如果防盗保护没有开启
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -68,6 +83,7 @@ public class Setup4Activity extends Activity {
             builder.create().show();
             return;
         }
+        //设置向导已经完成，在用户下次进入时判断，如果为true，说明已经设置过。
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean("isSetup", true);
         editor.commit();
