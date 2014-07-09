@@ -29,6 +29,10 @@ public class MainActivity extends Activity {
                         Intent lostProtectedIntent = new Intent(MainActivity.this, LostProtectedActivity.class);
                         startActivity(lostProtectedIntent);
                         break;
+                    case 7: //高级工具
+                        Intent atoolsIntent = new Intent(MainActivity.this, AtoolsActivity.class);
+                        startActivity(atoolsIntent);
+                        break;
                     case 8: //设置中心
                         Intent settingIntent = new Intent(MainActivity.this, SettingCenterActivity.class);
                         startActivity(settingIntent);
