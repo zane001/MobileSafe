@@ -6,11 +6,11 @@ import android.content.res.AssetManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * Created by zane001 on 2014/7/9.
+ * 复制归属地数据库到手机
  */
 public class AssetCopyUtil {
     private Context context;
