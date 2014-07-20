@@ -7,6 +7,7 @@ import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -59,6 +60,9 @@ public class ShowCallLocationService extends Service {
                     TextView tv = (TextView) view.findViewById(R.id.tv_show_address);
                     tv.setText(address);
                     final WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+                    params.gravity = Gravity.LEFT | Gravity.TOP;
+                    params.x = sp.getInt("lastX", 0);
+                    params.y = sp.getInt("lastY", 0);
                     params.height = WindowManager.LayoutParams.WRAP_CONTENT;
                     params.width = WindowManager.LayoutParams.WRAP_CONTENT;
                     params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
@@ -67,7 +71,7 @@ public class ShowCallLocationService extends Service {
                     params.format = PixelFormat.TRANSLUCENT;
                     params.type = WindowManager.LayoutParams.TYPE_TOAST;
                     windowManager.addView(view, params);    //将Toast及其参数挂载到窗体上,不会自动消失
-                    break;
+                break;
                 case TelephonyManager.CALL_STATE_IDLE:
                     if(view != null) {
                         windowManager.removeView(view);

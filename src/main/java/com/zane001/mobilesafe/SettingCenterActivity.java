@@ -32,6 +32,7 @@ public class SettingCenterActivity extends Activity implements View.OnClickListe
 
     private RelativeLayout rl_setting_change_bg;    //"来电归属地风格设置"控件的父控件
     private TextView tv_setting_show_bg;
+    private RelativeLayout rl_setting_change_location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,10 @@ public class SettingCenterActivity extends Activity implements View.OnClickListe
         rl_setting_change_bg = (RelativeLayout) findViewById(R.id.rl_setting_change_bg);
         tv_setting_show_bg = (TextView) findViewById(R.id.tv_setting_show_bg);
         rl_setting_change_bg.setOnClickListener(this);
+
+        //归属地显示位置
+        rl_setting_change_location  = (RelativeLayout) findViewById(R.id.rl_setting_change_location);
+        rl_setting_change_location.setOnClickListener(this);
     }
 
     @Override
@@ -104,6 +109,10 @@ public class SettingCenterActivity extends Activity implements View.OnClickListe
                 break;
             case R.id.rl_setting_change_bg:
                 showChooseBgDialog();
+                break;
+            case R.id.rl_setting_change_location:
+                Intent intent = new Intent(this, DragViewActivity.class);
+                startActivity(intent);
                 break;
         }
     }

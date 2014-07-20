@@ -37,6 +37,8 @@
         <activity android:name=".SelectContactActivity" />
         <activity android:name=".AtoolsActivity"/>
         <activity android:name=".NumberQueryActivity"/>
+        <activity android:name=".DragViewActivity"/>
+        <activity android:name=".CommonNumActivity"/>
 
         <receiver android:name=".receiver.BootCompleteReceiver">
             <intent-filter android:priority="1000">
