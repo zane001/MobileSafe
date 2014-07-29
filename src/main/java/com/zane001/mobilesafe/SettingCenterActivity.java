@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zane001.mobilesafe.service.ShowCallLocationService;
+import com.zane001.mobilesafe.service.WatchDogService1;
 import com.zane001.mobilesafe.utils.ServiceStatusUtil;
 
 /**
@@ -29,10 +30,15 @@ public class SettingCenterActivity extends Activity implements View.OnClickListe
     private CheckBox cb_setting_show_location;
     private RelativeLayout rl_setting_show_location;
     private Intent showLocationIntent;
-
     private RelativeLayout rl_setting_change_bg;    //"来电归属地风格设置"控件的父控件
+
     private TextView tv_setting_show_bg;
     private RelativeLayout rl_setting_change_location;
+
+    private RelativeLayout rl_setting_applock;
+    private CheckBox cb_setting_applock;    //程序锁开关
+    private TextView tv_setting_applock_status;
+    private Intent watchDogIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +85,37 @@ public class SettingCenterActivity extends Activity implements View.OnClickListe
         //归属地显示位置
         rl_setting_change_location  = (RelativeLayout) findViewById(R.id.rl_setting_change_location);
         rl_setting_change_location.setOnClickListener(this);
+
+        //程序锁
+        rl_setting_applock = (RelativeLayout) findViewById(R.id.rl_setting_applock);
+        cb_setting_applock = (CheckBox) findViewById(R.id.cb_setting_applock);
+        tv_setting_applock_status = (TextView) findViewById(R.id.tv_setting_applock_status);
+        watchDogIntent = new Intent(this, WatchDogService1.class);
+        rl_setting_applock.setOnClickListener(this);
+
+        boolean applock = sp.getBoolean("applock", false); //初始化，默认关闭程序锁
+        if (applock) {
+            tv_setting_applock_status.setText("程序锁已经开启");
+            cb_setting_applock.setChecked(true);
+        } else {
+            tv_setting_applock_status.setText("程序锁已经关闭");
+            cb_setting_applock.setChecked(false);
+        }
+        cb_setting_applock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putBoolean("applock", isChecked);
+                editor.commit();
+                if (isChecked) {
+                    tv_setting_applock_status.setText("程序锁服务已经开启");
+                    tv_setting_applock_status.setTextColor(Color.MAGENTA);
+                } else {
+                    tv_setting_applock_status.setText("程序锁服务没有开启");
+                    tv_setting_applock_status.setTextColor(Color.MAGENTA);
+                }
+            }
+        });
     }
 
     @Override
@@ -111,8 +148,19 @@ public class SettingCenterActivity extends Activity implements View.OnClickListe
                 showChooseBgDialog();
                 break;
             case R.id.rl_setting_change_location:
-                Intent intent = new Intent(this, DragViewActivity.class);
-                startActivity(intent);
+                Intent changeLocationIntent = new Intent(this, DragViewActivity.class);
+                startActivity(changeLocationIntent);
+                break;
+            case R.id.rl_setting_applock:
+                if(cb_setting_applock.isChecked()) {
+                    tv_setting_applock_status.setText("程序锁服务没有开启");
+                    stopService(watchDogIntent);
+                    cb_setting_applock.setChecked(false);
+                } else {
+                    tv_setting_applock_status.setText("程序锁服务已经开启");
+                    startService(watchDogIntent);
+                    cb_setting_applock.setChecked(true);
+                }
                 break;
         }
     }

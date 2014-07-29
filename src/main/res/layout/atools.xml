@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="高级工具"
-        android:textColor="#66ff00"
+        android:textColor="#9400D3"
         android:textSize="28sp" />
 
     <View

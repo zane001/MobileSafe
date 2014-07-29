@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_setting_autoupdate_text"
             android:text="自动更新没有开启"
-            android:textColor="#ffffff"
+            android:textColor="#FF34B3"
             android:textSize="14sp" />
 
         <CheckBox
@@ -196,7 +196,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_setting_call_firewall"
             android:text="来电黑名单拦截没有开启"
-            android:textColor="#ffffff"
+            android:textColor="#FF34B3"
             android:textSize="14sp" />
 
         <CheckBox
@@ -237,7 +237,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_setting_applock"
             android:text="程序锁服务没有开启"
-            android:textColor="#ffffff"
+            android:textColor="#FF34B3"
             android:textSize="14sp" />
 
         <CheckBox

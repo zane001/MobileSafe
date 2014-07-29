@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.GET_TASKS"/>
 
     <application
         android:allowBackup="true"
@@ -39,6 +40,10 @@
         <activity android:name=".NumberQueryActivity"/>
         <activity android:name=".DragViewActivity"/>
         <activity android:name=".CommonNumActivity"/>
+        <activity android:name=".AppLockActivity"/>
+        <activity android:name=".EnterPwdActivity"
+                  android:excludeFromRecents="true"
+                  android:launchMode="singleInstance"/>
 
         <receiver android:name=".receiver.BootCompleteReceiver">
             <intent-filter android:priority="1000">
@@ -61,7 +66,13 @@
             </intent-filter>
         </receiver>
 
+        <provider
+            android:authorities="com.zane001.applock"
+            android:name=".provider.AppLockDBProvider"/>
+
         <service android:name=".service.ShowCallLocationService"/>
+        <service android:name=".service.WatchDogService1"/>
+
     </application>
 
 </manifest>
