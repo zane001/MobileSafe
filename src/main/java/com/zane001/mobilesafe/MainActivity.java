@@ -29,6 +29,10 @@ public class MainActivity extends Activity {
                         Intent lostProtectedIntent = new Intent(MainActivity.this, LostProtectedActivity.class);
                         startActivity(lostProtectedIntent);
                         break;
+                    case 1:
+                        Intent callSmsIntent = new Intent(MainActivity.this, CallSmsSafeActivity.class);
+                        startActivity(callSmsIntent);
+                        break;
                     case 7: //高级工具
                         Intent atoolsIntent = new Intent(MainActivity.this, AtoolsActivity.class);
                         startActivity(atoolsIntent);

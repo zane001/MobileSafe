@@ -3,6 +3,12 @@ MobileSafe
 
 手机安全卫士
 ---------------
+### 2014-08-23
+1：对数据库的增删改查操作，实现黑名单的添加、修改、删除功能。<br/>
+2：借助广播实现对黑名单短信的拦截，TelephonyManager监听电话的状态，复用ConvertView来优化ListView。<br/>
+3：调用adapter.notifyDataSetChange()来实现上下文菜单列表中的数据及时更新。<br/>
+4：通过AIDL方式获取系统的电话管理服务，来实现黑名单自动挂断电话的功能。<br/>
+5：通过注册一个内容观察者getContentResolver().registerContentObserver()，观察一个URI数据的改变，及时更新数据库中的数据。
 ### 2014-07-29
 1：采用Service（watchDog）实时获取当前手机中位于栈顶的Activity所对应的包名。<br/>
 2：判断该包名是否需要被锁定，如果是，则弹出密码输入框，用户输入正确的密码，临时停止该应用程序的锁定。<br/>

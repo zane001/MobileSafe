@@ -13,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.zane001.mobilesafe.service.CallFirewallService;
 import com.zane001.mobilesafe.service.ShowCallLocationService;
 import com.zane001.mobilesafe.service.WatchDogService1;
 import com.zane001.mobilesafe.utils.ServiceStatusUtil;
@@ -34,6 +35,11 @@ public class SettingCenterActivity extends Activity implements View.OnClickListe
 
     private TextView tv_setting_show_bg;
     private RelativeLayout rl_setting_change_location;
+
+    private TextView tv_setting_call_firewall_status;   //来电黑名单设置
+    private CheckBox cb_setting_call_firewall;
+    private RelativeLayout rl_setting_call_firewall;
+    private Intent callFirewallIntent;
 
     private RelativeLayout rl_setting_applock;
     private CheckBox cb_setting_applock;    //程序锁开关
@@ -86,6 +92,13 @@ public class SettingCenterActivity extends Activity implements View.OnClickListe
         rl_setting_change_location  = (RelativeLayout) findViewById(R.id.rl_setting_change_location);
         rl_setting_change_location.setOnClickListener(this);
 
+        //来电黑名单设置的初始化
+        tv_setting_call_firewall_status = (TextView) findViewById(R.id.tv_setting_call_firewall_status);
+        cb_setting_call_firewall = (CheckBox) findViewById(R.id.cb_setting_call_firewall);
+        rl_setting_call_firewall = (RelativeLayout) findViewById(R.id.rl_setting_call_firewall);
+        callFirewallIntent = new Intent(this, CallFirewallService.class);
+        rl_setting_call_firewall.setOnClickListener(this);
+
         //程序锁
         rl_setting_applock = (RelativeLayout) findViewById(R.id.rl_setting_applock);
         cb_setting_applock = (CheckBox) findViewById(R.id.cb_setting_applock);
@@ -120,12 +133,28 @@ public class SettingCenterActivity extends Activity implements View.OnClickListe
 
     @Override
     protected void onResume() {
+        if(ServiceStatusUtil.isServiceRunning(this, "com.zane001.mobilesafe.service.CallFirewallService")) {
+            cb_setting_call_firewall.setChecked(true);
+            tv_setting_call_firewall_status.setText("来电黑名单拦截已经开启");
+        } else {
+            cb_setting_call_firewall.setChecked(false);
+            tv_setting_call_firewall_status.setText("来电黑名单拦截已经关闭");
+        }
+
         if(ServiceStatusUtil.isServiceRunning(this, "com.zane001.mobilesafe.service.ShowCallLocationService")) {
             cb_setting_show_location.setChecked(true);
             tv_setting_show_location_status.setText("来电归属地显示已经开启");
         } else {
             cb_setting_show_location.setChecked(false);
             tv_setting_show_location_status.setText("来电归属地显示已经关闭");
+        }
+
+        if(ServiceStatusUtil.isServiceRunning(this, "com.zane001.mobilesafe.service.WatchDogService1")) {
+            cb_setting_applock.setChecked(true);
+            tv_setting_applock_status.setText("来电归属地显示已经开启");
+        } else {
+            cb_setting_applock.setChecked(false);
+            tv_setting_applock_status.setText("来电归属地显示已经关闭");
         }
         super.onResume();
     }
@@ -150,6 +179,17 @@ public class SettingCenterActivity extends Activity implements View.OnClickListe
             case R.id.rl_setting_change_location:
                 Intent changeLocationIntent = new Intent(this, DragViewActivity.class);
                 startActivity(changeLocationIntent);
+                break;
+            case R.id.rl_setting_call_firewall: //来电黑名单拦截
+                if(cb_setting_call_firewall.isChecked()) {
+                    tv_setting_call_firewall_status.setText("来电黑名单拦截没有开启");
+                    stopService(callFirewallIntent);
+                    cb_setting_call_firewall.setChecked(false);
+                } else {
+                    tv_setting_call_firewall_status.setText("来电黑名单拦截已经开启");
+                    startService(callFirewallIntent);
+                    cb_setting_call_firewall.setChecked(true);
+                }
                 break;
             case R.id.rl_setting_applock:
                 if(cb_setting_applock.isChecked()) {

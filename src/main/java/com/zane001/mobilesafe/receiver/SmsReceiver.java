@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.zane001.mobilesafe.R;
+import com.zane001.mobilesafe.db.dao.BlackNumberDao;
 import com.zane001.mobilesafe.engine.GPSInfoProvider;
 
 
@@ -22,10 +23,12 @@ import com.zane001.mobilesafe.engine.GPSInfoProvider;
 public class SmsReceiver extends BroadcastReceiver {
     private static final String TAG = "SmsReceiver";
     private SharedPreferences sp;
+    private BlackNumberDao dao;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "收到短信");
+        dao = new BlackNumberDao(context);
         sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
         String safeNumber = sp.getString("safeNumber", "");
         Object[] objects = (Object[]) intent.getExtras().get("pdus");
@@ -34,6 +37,12 @@ public class SmsReceiver extends BroadcastReceiver {
         for(Object obj : objects) {
             SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) obj);
             String sender = smsMessage.getOriginatingAddress(); //获取发信人的地址
+            //判断短信号码是否是黑名单中的号码与是否短信拦截
+            int result = dao.findNumberMode(sender);
+            if(result == 1 || result == 2) {
+                Log.i(TAG, "拦截黑名单中的短信");
+                abortBroadcast();
+            }
             String body = smsMessage.getMessageBody();  //获取短信内容
             if("#*location*#".equals(body)) {
                 Log.i(TAG, "发送位置信息");
