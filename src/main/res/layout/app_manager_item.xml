@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+    <ImageView
+        android:id="@+id/iv_app_manager_icon"
+        android:layout_width="60dip"
+        android:layout_height="60dip"
+        android:src="@drawable/ic_launcher" />
+    <TextView
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:id="@+id/tv_app_manager_appName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iv_app_manager_icon"
+        android:text="程序名称"
+        android:textSize="24sp"
+        android:textColor="#8A2BE2"/>
+    <TextView
+        android:id="@+id/tv_app_manager_appVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_app_manager_appName"
+        android:layout_marginTop="8dip"
+        android:layout_toRightOf="@id/iv_app_manager_icon"
+        android:text="版本号:"
+        android:textSize="14sp"
+        android:textColor="#FF3E96"/>
+</RelativeLayout>

@@ -49,6 +49,7 @@
                   android:excludeFromRecents="true"
                   android:launchMode="singleInstance"/>
         <activity android:name=".CallSmsSafeActivity"/>
+        <activity android:name=".AppManagerActivity"/>
 
         <receiver android:name=".receiver.BootCompleteReceiver">
             <intent-filter android:priority="1000">

@@ -3,6 +3,11 @@ MobileSafe
 
 手机安全卫士
 ---------------
+### 2014-08-27
+1：使用PackageManager获取手机中的系统程序和用户程序。<br/>
+2：通过StatFs和Formatter来获取手机内存、SDCard的内存。<br/>
+3：使用PopupWindow时需要设置大小和背景资源。<br/>
+4：通过系统的Intent来实现软件的启动、分享、卸载功能。
 ### 2014-08-23
 1：对数据库的增删改查操作，实现黑名单的添加、修改、删除功能。<br/>
 2：借助广播实现对黑名单短信的拦截，TelephonyManager监听电话的状态，复用ConvertView来优化ListView。<br/>
