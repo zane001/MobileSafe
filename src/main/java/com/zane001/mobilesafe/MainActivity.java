@@ -37,6 +37,14 @@ public class MainActivity extends Activity {
                         Intent appManagerIntent = new Intent(MainActivity.this, AppManagerActivity.class);
                         startActivity(appManagerIntent);
                         break;
+                    case 3: //进程管理
+                        Intent taskManagerIntent = new Intent(MainActivity.this, TaskManagerActivity.class);
+                        startActivity(taskManagerIntent);
+                        break;
+                    case 4: //流量管理
+                        Intent trafficInfoIntent = new Intent(MainActivity.this, TrafficInfoActivity.class);
+                        startActivity(trafficInfoIntent);
+                        break;
                     case 7: //高级工具
                         Intent atoolsIntent = new Intent(MainActivity.this, AtoolsActivity.class);
                         startActivity(atoolsIntent);
