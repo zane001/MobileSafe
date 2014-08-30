@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.zane001.mobilesafe.domain.UpdateInfo;
 import com.zane001.mobilesafe.engine.UpdateInfoParser;
+import com.zane001.mobilesafe.utils.AssetCopyUtil;
 import com.zane001.mobilesafe.utils.DownloadUtil;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -133,6 +134,18 @@ public class SplashActivity extends Activity {
         aa.setDuration(2000);
         rl_splash.setAnimation(aa);
         new Thread(new CheckVersionTask()).start();
+        //拷贝病毒库的数据库文件
+        new Thread() {
+            @Override
+            public void run() {
+                File file = new File(getFilesDir(), "antivirus.db");
+                if(file.exists() && file.length() > 0 ) {
+
+                } else {
+                    AssetCopyUtil.copyVirusDb(getApplicationContext(), "antivirus.db", file.getAbsolutePath(), null);
+                }
+            }
+        }.start();
     }
 
     /**
@@ -263,6 +276,7 @@ public class SplashActivity extends Activity {
         });
         builder.create().show();
     }
+
     private String getVersion() {
         PackageManager pm = this.getPackageManager();
         try {

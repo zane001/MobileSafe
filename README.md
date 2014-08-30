@@ -3,13 +3,20 @@ MobileSafe
 
 手机安全卫士
 ---------------
+### 2014-08-30
+1：在Splash界面复制病毒库到手机，根据应用程序中的签名，通过查询病毒库，对比md5特征码，来判断是否是病毒程序。<br/>
+2：扫描病毒时旋转动画实现循环播放，只允许横版显示该手机杀毒的AntiVirusActivity。<br/>
+3：使用反射来调用PackageManager中的getPackageSizeInfo方法，使用IPackageStatsObserver.aidl文件。<br/>
+4: 使用AsyncTaskc处理异步任务，清理缓存，实现系统优化的功能。<br/>
+5: 在res/values/style.xml中自定义TextView，使用ScrollView来显示有缓存的应用程序。<br/>
+6：aidl文件放在Android Studio的src/main/aidl/xxx/xxx/xxx.aidl。
 ### 2014-08-29
 1：使用ActivityManager获取正在运行的程序信息（PID,占用内存大小等）。<br/>
 2：使用PackageManager获取对应的进程的应用程序信息。<br/>
 3：自定义Toast显示的位置、图片。<br/>
-4: 遍历集合时不能进行移除操作，重新定义一个List<ProcessInfo> killedProcessInfo来存放被Kill的进程。
+4: 遍历集合时不能进行移除操作，重新定义一个List<ProcessInfo> killedProcessInfo来存放被Kill的进程。<br/>
 5: 使用PackageManager获取具有权限信息的应用PackageManager.GET_PERMISSIONS，访问互联网的权限android.permission.INTERNET。<br/>
-6：使用SlidingDrawer实现上拉抽屉效果。
+6：使用SlidingDrawer实现上拉抽屉效果。<br/>
 7：使用TrafficStats.getUidRxBytes(uid)，根据uid来获取应用的上传、下载流量。
 ### 2014-08-27
 1：使用PackageManager获取手机中的系统程序和用户程序。<br/>

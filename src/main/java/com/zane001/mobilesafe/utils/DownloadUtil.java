@@ -1,8 +1,6 @@
 package com.zane001.mobilesafe.utils;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.net.Uri;
 
 import java.io.File;
 import java.io.FileOutputStream;

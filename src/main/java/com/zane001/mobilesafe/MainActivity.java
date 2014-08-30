@@ -45,6 +45,14 @@ public class MainActivity extends Activity {
                         Intent trafficInfoIntent = new Intent(MainActivity.this, TrafficInfoActivity.class);
                         startActivity(trafficInfoIntent);
                         break;
+                    case 5: //手机杀毒
+                        Intent antiVirusIntent = new Intent(MainActivity.this, AntiVirusActivity.class);
+                        startActivity(antiVirusIntent);
+                        break;
+                    case 6: //缓存清理
+                        Intent cleanCacheIntent = new Intent(MainActivity.this, CleanCacheActivity.class);
+                        startActivity(cleanCacheIntent);
+                        break;
                     case 7: //高级工具
                         Intent atoolsIntent = new Intent(MainActivity.this, AtoolsActivity.class);
                         startActivity(atoolsIntent);
